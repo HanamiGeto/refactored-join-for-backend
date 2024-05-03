@@ -265,9 +265,13 @@ function readSubtasks(taskID) {
     let checkBox = myElement.children[i].querySelector("input").checked; //tests if checkbox is false or true
     let subtaskName = myElement.children[i].querySelector("label").textContent; //gets the text content of the subtask
     let subtask;
-    let subtaskID = findTaskWithId(taskID)["subtasks"][i]["id"];
-    let subtaskTask = findTaskWithId(taskID)["subtasks"][i]["task"];
-    editTaskMarker ? subtask = new UpdateSubTask(subtaskID, subtaskName, checkBox, subtaskTask) : subtask = new CreateSubTask(subtaskName, checkBox);
+    if (editTaskMarker) {
+      let subtaskID = findTaskWithId(taskID)["subtasks"][i]["id"];
+      let subtaskTask = findTaskWithId(taskID)["subtasks"][i]["task"];
+      subtask = new UpdateSubTask(subtaskID, subtaskName, checkBox, subtaskTask);
+    } else {
+      subtask = new CreateSubTask(subtaskName, checkBox);
+    }
     subtasks.push(subtask);
   }
   return subtasks;
@@ -278,7 +282,6 @@ function readSubtasks(taskID) {
  * @returns The information inserted by the user.
  */
 async function createTask(path) {
-  // debugger;
   let title = document.getElementById("title").value;
   let contactsCheckedBoxes = getCheckedBoxes("assign-contacts");
   let date = document.getElementById("date").value;
