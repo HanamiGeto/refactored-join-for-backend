@@ -21,6 +21,8 @@ async function initBoard() {
   addToBoard();
   getHighlight();
   dropdownFields();
+  // showTaskModal("task-modal", 7)
+  // openAddTaskDialog('task-overlay', 'task-modal', 7)
 }
 
 /**
@@ -277,21 +279,35 @@ function openAddTaskDialog(id, id2, taskID) {
 function showTaskModal(id2, taskID) {
   if (id2 == "task-modal") {
     document.getElementById("task-modal").innerHTML = generateTaskModalHTML(findTaskWithId(taskID));
-    generateTaskProcessStatus(findTaskWithId(taskID));
     if (findTaskWithId(taskID)["assigned_to"]) {
-      for (let i = 0; i < findTaskWithId(taskID)["assigned_to"].length; i++) {
-        const contacts = findTaskWithId(taskID)["assigned_to"][i].name;
-        document.getElementById(`assigned-contacts${taskID}`).innerHTML += generateTaskModalContactsHTML(
-          getInitials(contacts),
-          contacts,
-          setColorForInitial(getInitials(contacts))
-        );
-        overflowAssignedContacts(taskID);
-      }
+      renderContacsTaskModal(taskID);
+    }
+    if (findTaskWithId(taskID)["subtasks"]) {
+      renderSubtasksTaskModal(taskID);
     }
     responsiveTaskModalAnimation(id2);
   } else {
     document.getElementById(id2).classList.add("slide-in");
+  }
+}
+
+function renderContacsTaskModal(taskID) {
+  for (let i = 0; i < findTaskWithId(taskID)["assigned_to"].length; i++) {
+    const contacts = findTaskWithId(taskID)["assigned_to"][i].name;
+    document.getElementById(`assigned-contacts${taskID}`).innerHTML += generateTaskModalContactsHTML(
+      getInitials(contacts),
+      contacts,
+      setColorForInitial(getInitials(contacts))
+    );
+    overflowAssignedContacts(taskID);
+  }
+}
+
+function renderSubtasksTaskModal(taskID) {
+  for (let i = 0; i < findTaskWithId(taskID)["subtasks"].length; i++) {
+    const subtasksName = findTaskWithId(taskID)["subtasks"][i].title;
+    const subtaskCheckBox = findTaskWithId(taskID)["subtasks"][i].done;
+    document.getElementById(`subtasks${taskID}`).innerHTML += createSubtaskEditHTML(subtasksName, subtaskCheckBox);
   }
 }
 
@@ -325,7 +341,6 @@ function editTasks(taskID) {
   editTaskMarker = true;
   document.getElementById("task-modal").innerHTML = generateEditTaskHTML(findTaskWithId(taskID));
   renderContactsInEditDropDown(taskID);
-  generateTaskProcessStatusforEditDialog(taskID);
   updateUrgencyBtns(taskID);
   if (findTaskWithId(taskID)["assigned_to"]) {
     for (let i = 0; i < findTaskWithId(taskID)["assigned_to"].length; i++) {
@@ -346,6 +361,13 @@ function editTasks(taskID) {
       document.getElementById("subtask-edit-container").innerHTML += createSubtaskEditHTML(subtaskName, checkBox);
     }
   }
+}
+
+async function deleteTask(taskID) {
+  await deleteUserTask(taskID);
+  closeTaskAddedToBoard();
+  await loadUserTasksFromBackend();
+  addToBoard();
 }
 
 /**

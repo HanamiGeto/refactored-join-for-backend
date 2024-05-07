@@ -18,6 +18,12 @@ function openContactDetail(index) {
   }, 200);
 }
 
+function closeContactDetail() {
+  setTimeout(() => {
+    document.getElementById("contact-detail").classList.remove("slide-in");
+  }, 20);
+}
+
 /**
  * function adds style to initiate slide-in CSS animation
  */

@@ -32,8 +32,6 @@
     padding-bottom: 10px;
 }
 
-.add-task-middle {}
-
 body > div > main > div > form > div.add-task-left > div > div.subtasks-area.margin-btn-45 {
     margin-bottom: 0 !important;
 }

@@ -77,14 +77,14 @@ function getValueFromEditInputs(taskID) {
   let editHeadline = document.getElementById(`edit-headline${taskID}`).value;
   let editDescription = document.getElementById(`edit-description${taskID}`).value;
   let selectedOption = document.getElementById("tasks_moveTo");
-  let editProcessStatus = selectedOption.options[selectedOption.selectedIndex].value;
+  // let editProcessStatus = selectedOption.options[selectedOption.selectedIndex].value;
   let editDate = document.getElementById(`edit-date${taskID}`).value;
   let contactsCheckedBoxes = getCheckedBoxes("assign-contacts");
   let urgency;
   document.querySelectorAll('input[name="prio-edit"]').forEach((check) => {
     check.checked ? urgency = check.value : "";
   });
-  return new UpdateTask(taskID, editHeadline, editDescription, contactsCheckedBoxes, urgency, editProcessStatus, editDate, readSubtasks(taskID));
+  return new UpdateTask(taskID, editHeadline, editDescription, contactsCheckedBoxes, urgency, editDate, readSubtasks(taskID));
 }
 
 /**
@@ -131,31 +131,55 @@ function checkButton(id) {
 /**
  * The function does show the "Subtask" input area.
  */
-function openSubtaskInput() {
-  document.getElementById("subtasks-area").classList.add("d-none");
-  document.getElementById("subtasks-input-area").classList.remove("d-none");
-  document.getElementById("subtask-input").value = "";
-  document.getElementById("subtask-input").focus();
+function openSubtaskInput(taskID) {
+  if (editTaskMarker) {
+    document.getElementById(`subtasks-area${taskID}`).classList.add("d-none");
+    document.getElementById(`subtasks-input-area${taskID}`).classList.remove("d-none");
+    document.getElementById(`subtask-input${taskID}`).value = "";
+    document.getElementById(`subtask-input${taskID}`).focus();
+  } else {
+    document.getElementById(`subtasks-area`).classList.add("d-none");
+    document.getElementById(`subtasks-input-area`).classList.remove("d-none");
+    document.getElementById(`subtask-input`).value = "";
+    document.getElementById(`subtask-input`).focus();
+  }
+
 }
 
 /**
  * The function remove the "Subtask" input area.
  */
-function closeSubtaskInput() {
-  document.getElementById("subtasks-input-area").classList.add("d-none");
-  document.getElementById("subtasks-area").classList.remove("d-none");
-  document.getElementById("subtask-container").value = "";
+function closeSubtaskInput(taskID) {
+  if (editTaskMarker) {
+    document.getElementById(`subtasks-input-area${taskID}`).classList.add("d-none");
+    document.getElementById(`subtasks-area${taskID}`).classList.remove("d-none");
+    document.getElementById(`subtask-container${taskID}`).value = "";
+  } else {
+    document.getElementById(`subtasks-input-area`).classList.add("d-none");
+    document.getElementById(`subtasks-area`).classList.remove("d-none");
+    document.getElementById(`subtask-container`).value = "";
+  }
+
 }
 
 /**
  * The function is adding a "Subtask".
  */
-function addSubtask() {
-  let input = document.getElementById("subtask-input").value;
-  if (input) {
-    document.getElementById("subtask-container").innerHTML += createSubtaskHTML(input);
-    closeSubtaskInput();
-    return input;
+function addSubtask(taskID) {
+  if (editTaskMarker) {
+    let input = document.getElementById(`subtask-input${taskID}`).value;
+    if (input) {
+      document.getElementById(`subtask-container${taskID}`).innerHTML += createSubtaskHTML(input);
+      closeSubtaskInput(taskID);
+      return input;
+    }
+  } else {
+    let input = document.getElementById("subtask-input").value;
+    if (input) {
+      document.getElementById("subtask-container").innerHTML += createSubtaskHTML(input);
+      closeSubtaskInput();
+      return input;
+    }
   }
 }
 

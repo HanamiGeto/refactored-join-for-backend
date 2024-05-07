@@ -57,6 +57,21 @@ function checkIfNewContactEmailExists(newmail) {
   }
 }
 
+function handleFormSubmission(event, index) {
+  event.preventDefault();
+
+  const form = event.target;
+  const formData = new FormData(form);
+
+  const submitButton = event.submitter;
+  if (submitButton.classList.contains("delete-contact-button")) {
+    deleteContact(index);
+  } else {
+    updateUserContact(index);
+  }
+}
+
+
 /**
  * Editing of existing contact
  * Function reads updated form fields and replaces specified contact object in object array
@@ -69,6 +84,13 @@ async function updateUserContact(index) {
   openContactDetail(index);
   clearEditContent();
   closeEditContactDialog();
+}
+
+async function deleteContact(index) {
+  await deleteContactBackend(activeUserContacts[index]["id"]);
+  await loadAllContacts();
+  closeEditContactDialog();
+  closeContactDetail();
 }
 
 /**

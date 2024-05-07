@@ -141,7 +141,7 @@ async function saveUserInBackend(newUser) {
         'password': newUser.userPassword
       })
     })
-    .then((resp) => resp.json())
+      .then((resp) => resp.json())
   } catch (error) {
     console.error(`Failed to save task into backend: ${error.message}`)
   }
@@ -163,7 +163,7 @@ async function saveInBackendUserContacts(contact) {
       },
       body: JSON.stringify(contact)
     })
-    .then((resp) => resp.json())
+      .then((resp) => resp.json())
   } catch (error) {
     console.error(`Failed to save task into backend: ${error.message}`)
   }
@@ -180,7 +180,7 @@ async function updateBackendUserContacts(contact, id) {
       },
       body: JSON.stringify(contact)
     })
-    .then((resp) => resp.json())
+      .then((resp) => resp.json())
   } catch (error) {
     console.error(`Failed to save task into backend: ${error.message}`)
   }
@@ -242,7 +242,7 @@ async function saveInBackendUserTasks(task) {
       },
       body: JSON.stringify(task)
     })
-    .then((resp) => resp.json())
+      .then((resp) => resp.json())
   } catch (error) {
     console.error(`Failed to save task into backend: ${error.message}`)
   }
@@ -259,9 +259,53 @@ async function updateUserTasks(taskID, task) {
       },
       body: JSON.stringify(task)
     })
-    .then((resp) => resp.json())
+      .then((resp) => resp.json())
   } catch (error) {
     console.error(`Failed to update task into backend: ${error.message}`)
+  }
+}
+
+async function deleteUserTask(taskID) {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://127.0.0.1:8000/tasks/${taskID}/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    if (response.ok) {
+      console.log("Task erfolgreich gelöscht");
+    } else {
+      // Falls die Antwort nicht erfolgreich war
+      const errorMessage = await response.text();
+      throw new Error(`Fehler beim Löschen des Tasks: ${errorMessage}`);
+    }
+  } catch (error) {
+    console.error(`Fehler beim Löschen des Tasks: ${error.message}`);
+  }
+}
+
+async function deleteContactBackend(id) {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://127.0.0.1:8000/contact/${id}/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    if (response.ok) {
+      console.log("Kontakt erfolgreich gelöscht");
+    } else {
+      // Falls die Antwort nicht erfolgreich war
+      const errorMessage = await response.text();
+      throw new Error(`Fehler beim Löschen des Kontakts: ${errorMessage}`);
+    }
+  } catch (error) {
+    console.error(`Fehler beim Löschen des Kontakts: ${error.message}`);
   }
 }
 
@@ -272,7 +316,7 @@ async function loadUserTasksFromBackend() {
   try {
     const token = localStorage.getItem('token');
     const response = await fetch('http://127.0.0.1:8000/tasks/', {
-      headers: {Authorization: `Token ${token}`}
+      headers: { Authorization: `Token ${token}` }
     })
     const data = await response.json();
     tasks = data;

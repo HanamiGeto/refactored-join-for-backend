@@ -317,7 +317,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  flex-direction: row;
+  /* flex-direction: row; */
 }
 
 /* ////////////// EDIT CONTACT DETAILS END ///////////////////*/
@@ -419,64 +419,6 @@ body {
   box-shadow: rgb(170, 170, 170) 2px 2px 3px 1px;
 }
 
-.delete-contact-button {
-  z-index: 6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 18px 10px;
-  gap: 10px;
-  position: fixed;
-  width: 220px;
-  height: 53px;
-  right: 40px;
-  bottom: 35px;
-  background-color: #d1d1d1;
-  border: 1px solid #d1d1d1;
-  border-radius: 10px;
-  font-size: 16px;
-  color: white;
-}
-
-.delete-contact-button img {
-  height: 20px;
-}
-
-.delete-contact-button-alert {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  padding: 18px 10px;
-  /* gap: 10px; */
-  position: fixed;
-  width: 220px;
-  height: 80px;
-  right: 40px;
-  bottom: 10px;
-  background-color: #fb0000;
-  border: 1px solid #fb0000;
-  border-radius: 10px;
-  font-size: 14px;
-  color: white;
-}
-
-.delete-contact-button-bottom {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 5px;
-  gap: 30px;
-}
-
-.delete-contact-button-bottom a:hover {
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 .create-contact-button {
   display: flex;
   justify-content: center;
@@ -496,6 +438,10 @@ body {
   transition: all 225ms ease-in-out;
 }
 
+.edit-delete-btn-container {
+  position: unset;
+}
+
 .edit-contact-button {
   display: flex;
   justify-content: center;
@@ -512,6 +458,19 @@ body {
   font-size: 23px;
   color: white;
   transition: all 225ms ease-in-out;
+}
+
+.delete-contact-button {
+  background-color: unset;
+  color: grey;
+  border: 1px solid grey;
+  transition: all 125ms ease-in-out;
+}
+
+.delete-contact-button:hover {
+  color: #4589ff;
+  border: 1px solid #4589ff;
+  transition: all 125ms ease-in-out;
 }
 
 .create-contact-button:hover {

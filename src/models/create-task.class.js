@@ -20,13 +20,12 @@ class CreateTask {
 
 class UpdateTask {
 
-  constructor(id, title, description, contacts, urgency, processStatus, dueDate, subtasks) {
+  constructor(id, title, description, contacts, urgency, dueDate, subtasks) {
     this.id = id,
     this.title = title,
     this.description = description,
     this.assigned_to = contacts,
     this.urgency = urgency,
-    this.process_status = processStatus,
     this.due_date = dueDate,
     this.subtasks = subtasks;
   }

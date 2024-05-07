@@ -27,50 +27,50 @@ function generateAssignedContactsHTML(contact, color) {
       `;
 }
 
-function generateTaskProcessStatus(taskID) {
-  let currentTaskStatus = taskID["process_status"];
-  let content = document.getElementById("current-process-status");
-  return (content.innerHTML = `Process-Status:&nbsp;<b>${currentTaskStatus}</b>  
-        `);
-}
+// function generateTaskProcessStatus(taskID) {
+//   let currentTaskStatus = taskID["process_status"];
+//   let content = document.getElementById("current-process-status");
+//   return (content.innerHTML = `Process-Status:&nbsp;<b>${currentTaskStatus}</b>  
+//         `);
+// }
 
-function generateTaskProcessStatusforEditDialog(taskID) {
-  let currentTaskStatus = findTaskWithId(taskID)["process_status"];
-  let content = document.getElementById("tasks_moveTo");
-  if (currentTaskStatus === "to-do") {
-    return (content.innerHTML = `
-                              <option value="to-do" selected>To do</option>
-                              <option value="in-progress">In progress</option>
-                              <option value="await-feedback">Await feedback</option>
-                              <option value="done">Done</option>
+// function generateTaskProcessStatusforEditDialog(taskID) {
+//   let currentTaskStatus = findTaskWithId(taskID)["process_status"];
+//   let content = document.getElementById("tasks_moveTo");
+//   if (currentTaskStatus === "to-do") {
+//     return (content.innerHTML = `
+//                               <option value="to-do" selected>To do</option>
+//                               <option value="in-progress">In progress</option>
+//                               <option value="await-feedback">Await feedback</option>
+//                               <option value="done">Done</option>
 
-    `);
-  } else if (currentTaskStatus === "await-feedback") {
-    return (content.innerHTML = `
-                              <option value="to-do">To do</option>
-                              <option value="in-progress">In progress</option>
-                              <option value="await-feedback" selected>Await feedback</option>
-                              <option value="done">Done</option>
+//     `);
+//   } else if (currentTaskStatus === "await-feedback") {
+//     return (content.innerHTML = `
+//                               <option value="to-do">To do</option>
+//                               <option value="in-progress">In progress</option>
+//                               <option value="await-feedback" selected>Await feedback</option>
+//                               <option value="done">Done</option>
 
-    `);
-  } else if (currentTaskStatus === "in-progress") {
-    return (content.innerHTML = `
-                              <option value="to-do">To do</option>
-                              <option value="in-progress" selected>In progress</option>
-                              <option value="await-feedback">Await feedback</option>
-                              <option value="done">Done</option>
+//     `);
+//   } else if (currentTaskStatus === "in-progress") {
+//     return (content.innerHTML = `
+//                               <option value="to-do">To do</option>
+//                               <option value="in-progress" selected>In progress</option>
+//                               <option value="await-feedback">Await feedback</option>
+//                               <option value="done">Done</option>
 
-    `);
-  } else {
-    return (content.innerHTML = `
-                                  <option value="to-do">To do</option>
-                                  <option value="in-progress">In progress</option>
-                                  <option value="await-feedback">Await feedback</option>
-                                  <option value="done" selected>Done</option>
+//     `);
+//   } else {
+//     return (content.innerHTML = `
+//                                   <option value="to-do">To do</option>
+//                                   <option value="in-progress">In progress</option>
+//                                   <option value="await-feedback">Await feedback</option>
+//                                   <option value="done" selected>Done</option>
     
-        `);
-  }
-}
+//         `);
+//   }
+// }
 
 function generateTaskModalHTML(task) {
   return `
@@ -80,9 +80,6 @@ function generateTaskModalHTML(task) {
                       <span class="department department-overlay ${task["category"]["color"]}">${task["category"]["title"]}</span>
                       <h3 class="task-headline-overlay">${task["title"]}</h3>
                       <span class="task-description-overlay">${task["description"]}</span>
-
-                      <div class="current-process-status-bold" id="current-process-status-bold">
-                      <span class="current-process-status" id="current-process-status"></span></div>
 
                       <div class="due-date-container">
                           <span>Due date:</span>
@@ -97,9 +94,20 @@ function generateTaskModalHTML(task) {
                           <div class="assigned-contacts" id="assigned-contacts${task["id"]}">  
                           </div>
                       </div>
-                      <button class="btn-add-task edit-btn" onclick="editTasks(${task["id"]})">
-                        <img src="../img/edit-btn-pencil.png" alt="">
-                      </button>
+                      <div class="assigned-to-container">
+                          <span>Subtasks</span>
+                          <div class="input-check" id="subtasks${task["id"]}"></div>
+                          </div>
+                      </div>
+                      <div class="edit-delete-btn-container">
+                        <button class="btn-add-task edit-btn" onclick="deleteTask(${task["id"]})">
+                            <img onmouseover="this.src='../img/delete-icon-hover.png'" onmouseout="this.src='../img/delete-icon.png'" src="../img/delete-icon.png" alt="">
+                        </button>
+                        |
+                        <button class="btn-add-task edit-btn" onclick="editTasks(${task["id"]})">
+                            <img onmouseover="this.src='../img/edit-icon-hover.png'" onmouseout="this.src='../img/edit-icon.png'" src="../img/edit-icon.png" alt="">
+                        </button>
+                      </div>
                   </div>
       `;
 }
@@ -135,10 +143,6 @@ function generateEditTaskHTML(task) {
                               <textarea class="edit-description" name="" id="edit-description${task["id"]}" cols="30" rows="5"
                                   placeholder="Enter a Description">${task["description"]}</textarea>
                           </div>
-                          <div class="task-process-main-div">
-                              <span class="category-header">Task Process-Status</span>
-                              <select class="tasks_moveTo" id="tasks_moveTo" value="Move"></select>
-                              </div>
                           <div class="date-area flex-column margin-btn-45">
                               <span class="category-header">Due date</span>
                               <input id="edit-date${task["id"]}" class="uniform-sizing date" type="date" value="${task["due_date"]}">
@@ -166,7 +170,6 @@ function generateEditTaskHTML(task) {
                                   </label>
                               </button>
                           </div>
-                          <div class="input-check" id="subtask-edit-container"></div>
                           <div class="uniform-sizing text-19pt dropdown" role="button" data-bs-toggle="collapse"
                               data-bs-target="#collapseContactsEdit" aria-expanded="false" aria-controls="collapseContactsEdit" id="contact-dropdown-edit">
                               <span>Select contacts to assign</span>
@@ -193,6 +196,30 @@ function generateEditTaskHTML(task) {
                                   </div>
                               </div>
                           </div>
+                          <div class="subtasks-area margin-btn-45">
+                          <span class="category-header margin-btn-25">Subtasks</span>
+                          <!--
+                          <div class="subtasks-input-area gray-fonts cursor-pointer" id="subtasks-area${task["id"]}"
+                              onclick="openSubtaskInput(${task["id"]})">
+                              <span>Add new subtask</span>
+                              <img src="../img/subtask-icon.png" alt="">
+                          </div>
+                          <div class="subtasks-input-area d-none" id="subtasks-input-area${task["id"]}">
+                              <input class="" type="text" placeholder="Add new subtask" id="subtask-input${task["id"]}" onkeydown="return (event.key == 'Enter' ? addSubtask(${task["id"]}) : '');">
+                              <div class="subtask-icons">
+                                  <img onclick="closeSubtaskInput(${task["id"]})" class="cursor-pointer"
+                                      src="../img/cancel-subtask.png" alt="">
+                                  <img src="../img/subtask-line.png" alt="">
+                                  <img onclick="addSubtask(${task["id"]})" class="cursor-pointer" src="../img/check-subtask.png"
+                                      alt="">
+                              </div>
+                          </div>
+                          <div class="input-check" id="subtask-container${task["id"]}">
+                          </div>
+                          -->
+                          <div class="input-check" id="subtask-edit-container"></div>
+
+                      </div>
                       </form>
                       <div class="button-edit-task-area-confirm">
                       <button class="btn-add-task ok-btn" onclick="saveTasks(${task["id"]})">
@@ -271,7 +298,7 @@ function generateContactEditDialog(index) {
                       <div class="user-avatar" id="user-avatar"></div>
                       
                       <div class="form">
-                          <form class="add-contact_form" onsubmit="updateUserContact(${index}); return false;">
+                          <form class="add-contact_form" onsubmit="handleFormSubmission(event, ${index}); return false;">
                               <div class="add-contact-input-field">
                                   <input id="edit-contact-name" class="contact-form-control contacts_input" type="text"
                                       placeholder="Name" required>
@@ -288,6 +315,9 @@ function generateContactEditDialog(index) {
                                   <img src="../img/phone_icon.png" alt="">
                               </div>
                               <div class="edit-contact-buttons">
+                              <button type="submit" class="edit-contact-button delete-contact-button">
+                                  <span>Delete</span>
+                              </button>
                               <button type="submit" class="edit-contact-button">
                                   <span>Save</span><img src="../img/addcontact.png">
                               </button>
@@ -318,7 +348,14 @@ function generateContactDetail(index, name, initials, initialsColor, email, phon
       <div>
           <div class="contact-detail-header-right">
               <div class="contact-name">${name}</div>
-              <div onclick ="toAddTask()"class="add-task-link"><img src="../img/plus_icon_small.png">Add Task</div>
+              <div class="edit-delete-btn-container">
+                        <button class="btn-add-task edit-btn" onclick="openEditContactDialog(${index})">
+                            <img onmouseover="this.src='../img/edit-icon-hover.png'" onmouseout="this.src='../img/edit-icon.png'" src="../img/edit-icon.png" alt="">
+                        </button>
+                        <button class="btn-add-task edit-btn" onclick="deleteContact(${index})">
+                            <img onmouseover="this.src='../img/delete-icon-hover.png'" onmouseout="this.src='../img/delete-icon.png'" src="../img/delete-icon.png" alt="">
+                        </button>
+                      </div>
           </div>
     
       </div>
@@ -328,7 +365,6 @@ function generateContactDetail(index, name, initials, initialsColor, email, phon
     
       <div class="contact-body-header">
           <div class="contact-information">Contact Information</div>
-          <div class="edit-contact" onclick="openEditContactDialog(${index})"><img  onclick="openEditContactDialog()"src="../img/pencil_small.png">Edit Contact</div>
       </div>
       <div class="contact-detail-bold">Email</div>
       <a class="contact-detail-medium" href="mailto:${email}">${email}</a>
